@@ -305,15 +305,17 @@ class Student:
                 else:
                     qualification = self.uncompleted_qualifications["Exam"][row]
 
-                entry = GradeEntry(
-                    qualification,
-                    self.uncompleted_qualifications["Subject"][row],
-                    valid_grade,
-                    True,
-                    self.uncompleted_qualifications["Date"][row].split("-")[-1],
-                    False,
-                )
-                self.predicted_entries.append(entry)
+                if self.is_predicted_qual_valid(qualification):
+
+                    entry = GradeEntry(
+                        qualification,
+                        self.uncompleted_qualifications["Subject"][row],
+                        valid_grade,
+                        True,
+                        self.uncompleted_qualifications["Date"][row].split("-")[-1],
+                        False,
+                    )
+                    self.predicted_entries.append(entry)
 
             elif (not is_pred_grade) & (not is_grade):
 
@@ -329,15 +331,17 @@ class Student:
                 else:
                     qualification = self.uncompleted_qualifications["Exam"][row]
 
-                entry = GradeEntry(
-                    qualification,
-                    self.uncompleted_qualifications["Subject"][row],
-                    valid_grade,
-                    True,
-                    self.uncompleted_qualifications["Date"][row].split("-")[-1],
-                    False,
-                )
-                self.predicted_entries.append(entry)
+                if self.is_predicted_qual_valid(qualification):
+
+                    entry = GradeEntry(
+                        qualification,
+                        self.uncompleted_qualifications["Subject"][row],
+                        valid_grade,
+                        True,
+                        self.uncompleted_qualifications["Date"][row].split("-")[-1],
+                        False,
+                    )
+                    self.predicted_entries.append(entry)
 
             elif isinstance(self.uncompleted_qualifications["Date"][row], str):
                 if (
@@ -351,36 +355,47 @@ class Student:
                     else:
                         qualification = self.uncompleted_qualifications["Exam"][row - 1]
 
-                    # Ignores the first entry which would just be the date
-                    individual_modules = all_module_details.split("Title:")[1:]
-                    # print(individual_modules)
-                    for module in individual_modules:
-                        module_info = module.split("Date:")[0]
+                    if self.is_predicted_qual_valid(qualification):
 
-                        if "Predicted Grade:" in module_info:
-                            split = module_info.split("Predicted Grade:")
-                            subject = split[0]
-                            grade = split[1]
-                        elif "Grade:" in module_info:
-                            split = module_info.split("Grade:")
-                            subject = split[0]
-                            grade = split[1]
-                        elif "Value:" in module_info:
-                            split = module_info.split("Value:")
-                            subject = split[0]
-                            grade = split[1]
-                        else:
-                            subject = module_info
-                            grade = None
+                        # Ignores the first entry which would just be the date
+                        individual_modules = all_module_details.split("Title:")[1:]
+                        # print(individual_modules)
+                        for module in individual_modules:
+                            module_info = module.split("Date:")[0]
 
-                        entry = GradeEntry(
-                            qualification,
-                            subject,
-                            grade,
-                            True,
-                            None,
-                            False,
-                        )
-                        self.predicted_entries.append(entry)
+                            if "Predicted Grade:" in module_info:
+                                split = module_info.split("Predicted Grade:")
+                                subject = split[0]
+                                grade = split[1]
+                            elif "Grade:" in module_info:
+                                split = module_info.split("Grade:")
+                                subject = split[0]
+                                grade = split[1]
+                            elif "Value:" in module_info:
+                                split = module_info.split("Value:")
+                                subject = split[0]
+                                grade = split[1]
+                            else:
+                                subject = module_info
+                                grade = None
+
+                            entry = GradeEntry(
+                                qualification,
+                                subject,
+                                grade,
+                                True,
+                                None,
+                                False,
+                            )
+                            self.predicted_entries.append(entry)
 
         return self.predicted_entries
+
+    def is_predicted_qual_valid(self, qual):
+        if isna(qual):
+            return False
+
+        if qual in valid_exams():
+            return True
+        else:
+            return False

@@ -27,18 +27,18 @@ def get_full_path(path):
 pdf_filename_split_delimeter = "_"
 pdf_filename_split_index = 2
 
-path_to_pdfs_to_extract = os.path.join(".", "pdfs")
+path_to_pdfs_to_extract = os.path.join(".", "testing", "case_3", "pdfs")
 path_to_pdfs_to_extract = get_full_path(path_to_pdfs_to_extract)
 
 qualification_mapping_filename = "mapping.xlsx"
 qualification_mapping_sheet_name = "Mapping"
-path_to_mapping_file = os.path.join(".", "pdfs")
+path_to_mapping_file = os.path.join(".", "testing", "case_3", 'pdfs')
 path_to_mapping_file = get_full_file_path(
     path_to_mapping_file, qualification_mapping_filename
 )
 
 # target_ucas_id_file = "target_ids.xlsx"
-target_ucas_id_file = "Banner_Example.xlsx"
+target_ucas_id_file = "Batch 1.xlsx"
 is_id_file_banner = True
 is_banner_cumulative = True
 which_column = "F"
@@ -65,7 +65,7 @@ assert (
 
 database_of_extracted_pdfs = "previously_extracted.csv"
 path_to_database_of_extracted_pdfs = get_full_file_path(
-    os.path.join(".", "data"), database_of_extracted_pdfs
+    os.path.join(".", "testing", "case_3", "data"), database_of_extracted_pdfs
 )
 
 terminate_if_batch_num_repeated = True
@@ -85,10 +85,10 @@ allocation_details = {
 ############### OUTPUT RELATED ###############
 ##############################################
 
-path_to_pdf_pool = os.path.join(".", "pool")
+path_to_pdf_pool = os.path.join(".", "testing", "case_3", "output", "pool")
 path_to_pdf_pool = get_full_path(path_to_pdf_pool)
 
-output_path = os.path.join(".", "output")
+output_path = os.path.join(".", "testing", "case_3", "output")
 output_path = get_full_path(output_path)
 
 output_filename = f"grades_{batch_number}.xlsx"
