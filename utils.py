@@ -9,7 +9,7 @@ from random import randint
 
 import tabula
 import numpy as np
-from pandas import read_excel
+from pandas import read_excel, Series
 
 import settings
 
@@ -588,7 +588,7 @@ def check_broken_table(current_page_number, filename, current_table):
     if top_table.empty:
         table_length = len(top_table_header)
         if table_length == current_table_length:
-            return top_table_header.to_series()
+            return Series(top_table_header.values, index=current_table_header)
         elif detail_string() in top_table_header:
             return move_data_out_of_header(
                 top_table, current_table_header, table_length
