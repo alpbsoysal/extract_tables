@@ -240,7 +240,9 @@ class Student:
         if isna(self.completed_qualifications["Exam"][row]):
             return False
 
-        if self.completed_qualifications["Exam"][row] in valid_exams():
+        # This complicated looking generator just removes special characters and spaces from quals for robustness
+        qual = ''.join(e for e in self.completed_qualifications["Exam"][row] if e.isprintable() and not e.isspace())
+        if qual in [''.join(e for e in a if e.isprintable() and not e.isspace()) for a in valid_exams()]:
             return True
         else:
             return False
@@ -275,7 +277,8 @@ class Student:
         if isna(self.exam_results["Exam Level"][row]):
             return False
 
-        if self.exam_results["Exam Level"][row] in valid_exams():
+        qual = ''.join(e for e in self.completed_qualifications["Exam"][row] if e.isprintable() and not e.isspace())
+        if qual in [''.join(e for e in a if e.isprintable() and not e.isspace()) for a in valid_exams()]:
             return True
         else:
             return False
@@ -395,7 +398,8 @@ class Student:
         if isna(qual):
             return False
 
-        if qual in valid_exams():
+        qual = ''.join(e for e in qual if e.isprintable() and not e.isspace())
+        if qual in [''.join(e for e in a if e.isprintable() and not e.isspace()) for a in valid_exams()]:
             return True
         else:
             return False
