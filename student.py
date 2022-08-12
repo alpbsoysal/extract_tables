@@ -113,6 +113,11 @@ class Student:
                         entry.grade = grade.replace("h", "")
                         entry.grade_info[0] = entry.grade
 
+                    # Get actual subject name
+                    subject = entry.subject.split('Value:')[0].split('Predicted Grade:')[0].split("Grade:")[0].rstrip(' ')
+                    entry.subject = subject
+                    entry.grade_info[1] = subject
+
                 self.which_grades[grade_entries_key] = grade_entries
 
     def get_all_qualifications(self):
@@ -184,23 +189,29 @@ class Student:
         for module in individual_modules:
 
             module_info = module.split("Date:")[0]
+            predicted = False
+            exam = False
 
             if "Predicted Grade:" in module_info:
-                grade = module_info.split("Predicted Grade:")[0]
+                grade = module_info.split("Predicted Grade:")[1]
+                predicted = True
             elif "Grade:" in module_info:
-                grade = module_info.split("Grade:")[0]
+                grade = module_info.split("Grade:")[1]
             elif "Value:" in module_info:
-                grade = module_info.split("Value:")[0]
+                grade = module_info.split("Value:")[1]
             else:
                 grade = None
+
+            if grade is not None:
+                grade = ''.join(e for e in grade if e.isnumeric())
 
             entry = GradeEntry(
                 qualification,
                 module_info,
                 grade,
-                True,
+                predicted,
                 None,
-                False,
+                exam,
             )
             output.append(entry)
 
@@ -241,7 +252,7 @@ class Student:
             return False
 
         # This complicated looking generator just removes special characters and spaces from quals for robustness
-        qual = ''.join(e for e in self.completed_qualifications["Exam"][row] if e.isprintable() and not e.isspace())
+        qual = ''.join(e for e in str(self.completed_qualifications["Exam"][row]) if e.isprintable() and not e.isspace())
         if qual in [''.join(e for e in a if e.isprintable() and not e.isspace()) for a in valid_exams()]:
             return True
         else:
@@ -277,7 +288,7 @@ class Student:
         if isna(self.exam_results["Exam Level"][row]):
             return False
 
-        qual = ''.join(e for e in self.completed_qualifications["Exam"][row] if e.isprintable() and not e.isspace())
+        qual = ''.join(e for e in str(self.exam_results["Exam Level"][row]) if e.isprintable() and not e.isspace())
         if qual in [''.join(e for e in a if e.isprintable() and not e.isspace()) for a in valid_exams()]:
             return True
         else:
@@ -346,7 +357,12 @@ class Student:
                     )
                     self.predicted_entries.append(entry)
 
-            elif isinstance(self.uncompleted_qualifications["Date"][row], str):
+            elif self.is_detailed_entry(self.uncompleted_qualifications, row):
+                
+                detailed_entries = self.handle_detailed_entry(self.uncompleted_qualifications, row)
+                self.predicted_entries += detailed_entries
+
+            """elif isinstance(self.uncompleted_qualifications["Date"][row], str):
                 if (
                     is_pred_grade & is_grade
                     and self.uncompleted_qualifications["Date"][row] in detail_string()
@@ -390,7 +406,7 @@ class Student:
                                 None,
                                 False,
                             )
-                            self.predicted_entries.append(entry)
+                            self.predicted_entries.append(entry)"""
 
         return self.predicted_entries
 
@@ -398,7 +414,7 @@ class Student:
         if isna(qual):
             return False
 
-        qual = ''.join(e for e in qual if e.isprintable() and not e.isspace())
+        qual = ''.join(e for e in str(qual) if e.isprintable() and not e.isspace())
         if qual in [''.join(e for e in a if e.isprintable() and not e.isspace()) for a in valid_exams()]:
             return True
         else:
