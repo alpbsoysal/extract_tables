@@ -322,11 +322,21 @@ def check_ids_correspond(ids_from_pdf_folder):
             logging.error(msg)
             raise InputError("ids_from_target_file != intersection", msg)
 
+def remove_extra_pdfs(target_ids, pdf_paths, pdf_ids):
+
+    not_in_target = list(set(pdf_ids) - set(target_ids))
+    extra_locs = [np.argwhere(np.asarray(pdf_ids) == id) for id in not_in_target]
+
+    filtered_pdf_ids = [pdf_ids[i] for i in range(0, len(pdf_ids)) if i not in extra_locs]
+    filtered_pdf_paths = [pdf_paths[i] for i in range(0, len(pdf_paths)) if i not in extra_locs]
+
+    return (filtered_pdf_paths, filtered_pdf_ids) 
 
 def order_pdfs_to_target_id_input(all_pdf_paths, ids_from_all_pdfs):
 
     # Perform check to see if IDs from PDFs and target IDs correspond
     target_ids = check_ids_correspond(ids_from_all_pdfs)
+
     # Convert to numpy array to get argwhere to work
     if isinstance(target_ids, list):
         target_ids = np.asarray(target_ids)
@@ -338,6 +348,8 @@ def order_pdfs_to_target_id_input(all_pdf_paths, ids_from_all_pdfs):
 
     # Enforced type being integer for comparison
     ids_from_all_pdfs = [int(item) for item in ids_from_all_pdfs]
+    # Remove extra pdfs from list
+    all_pdf_paths, ids_from_all_pdfs = remove_extra_pdfs(target_ids, all_pdf_paths, ids_from_all_pdfs)
 
     # Location of ID from pdfs in target ids list
     id_locs = [
