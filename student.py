@@ -149,7 +149,7 @@ class Student:
                     # It is the qualification we are looking for.
                     # The grade is not None AND year is not None (implies it is a module/detail entry)
                     if (
-                        target_qualification in item.qualification
+                        target_qualification == item.qualification
                         and item.grade is not None
                         and item.year is not None
                     ):
@@ -181,9 +181,12 @@ class Student:
         else:
             qualification = None
 
-        qualification = self.internal_mapping.get(''.join(e for e in str(qualification) if e.isprintable() and not e.isspace()))
-
         output = []
+
+        if self.is_qual_valid(qualification):
+
+            qualification = self.get_valid_qualification(qualification)
+
         all_module_details = input_qualification["Body"][rowCounter]
 
         # Ignores the first entry which would just be the date
@@ -241,9 +244,7 @@ class Student:
 
                 self.completed_entries.append(entry)
 
-            elif self.is_detailed_entry(
-                self.completed_qualifications, row
-            ) and self.is_completed_qual_valid(row - 1):
+            elif self.is_detailed_entry(self.completed_qualifications, row):
 
                 detailed_entries = self.handle_detailed_entry(
                     self.completed_qualifications, row
