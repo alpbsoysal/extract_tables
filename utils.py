@@ -30,8 +30,6 @@ class InputError(Exception):
 
 
 def initialise_logger():
-    if not os.path.exists(settings.output_path):
-        raise NotADirectoryError("Output Directory NOT Found")
 
     if os.path.exists(settings.path_to_log):
         os.remove(settings.path_to_log)
@@ -96,19 +94,13 @@ def is_abs_path(input_path):
 
 
 def check_output_dirs_exist():
-    if not os.path.exists(settings.output_path):
-        raise NotADirectoryError("Output folder does not exists")
-
-    if not os.path.exists(settings.path_to_pdf_pool):
-        raise NotADirectoryError("PDF pool does not exists")
-
     marker_names = list(settings.allocation_details.keys())
 
     for name in marker_names:
         folder_name = name + str(settings.batch_number)
         marker_path = os.path.join(settings.output_path, folder_name)
         if not os.path.exists(marker_path):
-            raise NotADirectoryError(f"{folder_name} Folder does not exists")
+            os.makedirs(marker_path)
 
 
 def check_target_id_file_settings():
@@ -149,7 +141,7 @@ def is_database_path_valid():
         else:
             return False
 
-    _, ext = os.path.splitext(settings.database_of_extracted_pdfs)
+    _, ext = os.path.splitext(settings.database_name)
 
     if ext != ".csv":
         raise InputError(True, "Database file MUST be a .csv")
