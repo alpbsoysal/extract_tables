@@ -25,14 +25,14 @@ class ExtractedStudents:
     Class that stores all the students and co-ordinates the output
     """
 
-    def __init__(self, applicant_ids, internal_mapping):
+    def __init__(self, applicant_ids):
         self.student_ids = applicant_ids
 
         self.num_students = len(applicant_ids)
 
         self.all_students = [None] * self.num_students
 
-        self.internal_mapping = internal_mapping
+        #self.internal_mapping = internal_mapping
 
         self.marker_allocation = self.assign_students_to_marker()
         # print(self.marker_allocation)
@@ -260,9 +260,8 @@ class ExtractedStudents:
 
             # Identify and populate cell with the main qualification
             main_qualification = student.get_main_qualification()
-            sanitised_string = self.internal_mapping.get(main_qualification)
 
-            if main_qualification == "" or sanitised_string is None:
+            if main_qualification == "" or main_qualification is None:
                 ws.cell(row=row_counter, column=2, value="")
                 ws.cell(
                     row=row_counter,
@@ -271,19 +270,19 @@ class ExtractedStudents:
                 )
                 continue
 
-            if "United Kingdom" in sanitised_string:
+            if "United Kingdom" in main_qualification:
                 uk_based = True
             else:
                 uk_based = False
 
-            if "A Levels" in sanitised_string:
-                sanitised_string = self.update_al_string(
-                    categorised_entries, sanitised_string, is_fm
+            if "A Levels" in main_qualification:
+                main_qualification = self.update_al_string(
+                    categorised_entries, main_qualification, is_fm
                 )
 
             # Fill in the qualification to the worksheet
             ws.cell(
-                row=row_counter, column=2, value="{}".format(sanitised_string.strip())
+                row=row_counter, column=2, value="{}".format(main_qualification.strip())
             )
 
             # Create log for issues

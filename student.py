@@ -20,8 +20,9 @@ class Student:
     Class for a single pdf/student
     """
 
-    def __init__(self, id_num, extracted_tables, table_headers):
+    def __init__(self, id_num, extracted_tables, table_headers, internal_mapping):
         self.unique_id = id_num
+        self.internal_mapping = internal_mapping
 
         self.completed_qualifications = None
         self.uncompleted_qualifications = None
@@ -180,6 +181,8 @@ class Student:
         else:
             qualification = None
 
+        qualification = self.internal_mapping.get(''.join(e for e in str(qualification) if e.isprintable() and not e.isspace()))
+
         output = []
         all_module_details = input_qualification["Body"][rowCounter]
 
@@ -225,8 +228,10 @@ class Student:
 
             if self.is_completed_qual_valid(row):
 
+                qual = self.internal_mapping.get(''.join(e for e in str(self.completed_qualifications["Exam"][row]) if e.isprintable() and not e.isspace()))
+
                 entry = GradeEntry(
-                    self.completed_qualifications["Exam"][row],
+                    qual,
                     self.completed_qualifications["Subject"][row],
                     self.completed_qualifications["Grade"][row],
                     False,
@@ -253,7 +258,7 @@ class Student:
 
         # This complicated looking generator just removes special characters and spaces from quals for robustness
         qual = ''.join(e for e in str(self.completed_qualifications["Exam"][row]) if e.isprintable() and not e.isspace())
-        if qual in [''.join(e for e in a if e.isprintable() and not e.isspace()) for a in valid_exams()]:
+        if qual in [''.join(e for e in a if e.isprintable() and not e.isspace()) for a in valid_exams(self.internal_mapping)]:
             return True
         else:
             return False
@@ -266,8 +271,9 @@ class Student:
 
             if self.is_examresult_valid(row):
 
+                qual = self.internal_mapping.get(''.join(e for e in str(self.exam_results["Exam Level"][row]) if e.isprintable() and not e.isspace()))
                 entry = GradeEntry(
-                    self.exam_results["Exam Level"][row],
+                    qual,
                     self.exam_results["Subject"][row],
                     self.exam_results["Grade"][row],
                     False,
@@ -289,7 +295,7 @@ class Student:
             return False
 
         qual = ''.join(e for e in str(self.exam_results["Exam Level"][row]) if e.isprintable() and not e.isspace())
-        if qual in [''.join(e for e in a if e.isprintable() and not e.isspace()) for a in valid_exams()]:
+        if qual in [''.join(e for e in a if e.isprintable() and not e.isspace()) for a in valid_exams(self.internal_mapping)]:
             return True
         else:
             return False
@@ -321,6 +327,8 @@ class Student:
 
                 if self.is_predicted_qual_valid(qualification):
 
+                    qualification = self.internal_mapping.get(''.join(e for e in str(qualification) if e.isprintable() and not e.isspace()))
+
                     entry = GradeEntry(
                         qualification,
                         self.uncompleted_qualifications["Subject"][row],
@@ -347,6 +355,8 @@ class Student:
 
                 if self.is_predicted_qual_valid(qualification):
 
+                    qualification = self.internal_mapping.get(''.join(e for e in str(qualification) if e.isprintable() and not e.isspace()))
+
                     entry = GradeEntry(
                         qualification,
                         self.uncompleted_qualifications["Subject"][row],
@@ -369,7 +379,7 @@ class Student:
             return False
 
         qual = ''.join(e for e in str(qual) if e.isprintable() and not e.isspace())
-        if qual in [''.join(e for e in a if e.isprintable() and not e.isspace()) for a in valid_exams()]:
+        if qual in [''.join(e for e in a if e.isprintable() and not e.isspace()) for a in valid_exams(self.internal_mapping)]:
             return True
         else:
             return False

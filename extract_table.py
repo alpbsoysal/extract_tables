@@ -57,7 +57,7 @@ if __name__ == "__main__":
     ALL_FILES, APPLICANT_IDS = order_pdfs_to_target_id_input(ALL_FILES, APPLICANT_IDS)
 
     # Initialise object to store extracted information
-    all_students = ExtractedStudents(APPLICANT_IDS, INTERNAL_MAPPING)
+    all_students = ExtractedStudents(APPLICANT_IDS)
     counter = 0
 
     total_num_files = len(ALL_FILES)
@@ -90,7 +90,7 @@ if __name__ == "__main__":
                 logging.warning("EOF reached before exit condition")
                 logging.warning(f"Check file with ID: {app_id}")
                 all_students.add_student_sequentially(
-                    Student(app_id, grade_tables, grade_counters), counter
+                    Student(app_id, grade_tables, grade_counters, INTERNAL_MAPPING), counter
                 )
                 copy_file(file, all_students, app_id)
                 # If EOF reached before exit table
@@ -120,7 +120,7 @@ if __name__ == "__main__":
             if exit_loop:
                 # Add completed form to all students
                 all_students.add_student_sequentially(
-                    Student(app_id, grade_tables, grade_counters), counter
+                    Student(app_id, grade_tables, grade_counters, INTERNAL_MAPPING), counter
                 )
                 copy_file(file, all_students, app_id)
                 break

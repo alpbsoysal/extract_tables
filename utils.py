@@ -68,9 +68,9 @@ def get_internal_mapping(path_to_file, sheet_name):
             if val is None:
                 # Value in first column is the desired string
                 val = cell.value
-            else:
+            elif cell.value is not None:
                 # Other values is what we have
-                output_dict[cell.value] = val
+                output_dict[''.join(e for e in str(cell.value) if e.isprintable() and not e.isspace())] = val
 
     logging.info("Mapping file loaded")
 
