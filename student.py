@@ -117,7 +117,7 @@ class Student:
                         entry.grade_info[0] = entry.grade
 
                     # Get actual subject name
-                    subject = entry.subject.split('Value:')[0].split('Predicted Grade:')[0].split("Grade:")[0].rstrip(' ')
+                    subject = entry.subject.split('Value:')[0].split('Predicted Grade:')[0].split("Grade:")[0].strip()
                     entry.subject = subject
                     entry.grade_info[1] = subject
 
