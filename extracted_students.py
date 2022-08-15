@@ -4,9 +4,6 @@ import os
 from random import randint
 
 from pdf_strings import (
-    math_mapping,
-    physics_mapping,
-    fm_mapping,
     qualifications_with_overall_score,
     ib_permutations,
 )
@@ -14,6 +11,7 @@ from pdf_strings import (
 from utils import (
     InputError,
     is_abs_path,
+    escape_backslash_r,
 )
 
 import settings
@@ -25,8 +23,11 @@ class ExtractedStudents:
     Class that stores all the students and co-ordinates the output
     """
 
-    def __init__(self, applicant_ids):
+    def __init__(self, applicant_ids, math_mapping, physics_mapping, fm_mapping):
         self.student_ids = applicant_ids
+        self.math_mapping = math_mapping
+        self. physics_mapping = physics_mapping
+        self. fm_mapping = fm_mapping
 
         self.num_students = len(applicant_ids)
 
@@ -248,7 +249,7 @@ class ExtractedStudents:
             ws.cell(row=row_counter, column=15, value=settings.batch_number)
 
             # Categorise each entry into subjects
-            categorised_entries = self.sort_into_subjects(student)
+            categorised_entries = self.sort_into_subjects(student, self.math_mapping, self.physics_mapping, self.fm_mapping)
 
             # Identify if FM is presetn
             if categorised_entries["fm"]:
@@ -626,7 +627,7 @@ class ExtractedStudents:
         return log
 
     @staticmethod
-    def sort_into_subjects(student):
+    def sort_into_subjects(student, math_mapping, physics_mapping, fm_mapping):
 
         categorised_entries = {
             "math": [],
@@ -640,11 +641,11 @@ class ExtractedStudents:
             # List of entries are not empty
             if grade_entries:
                 for entry in grade_entries:
-                    if entry.subject.lower() in {s.lower() for s in math_mapping().get(entry.qualification, set())}:
+                    if escape_backslash_r(entry.subject).lower() in {s.lower() for s in math_mapping.get(entry.qualification, set())}:
                         categorised_entries["math"].append(entry)
-                    elif entry.subject.lower() in {s.lower() for s in physics_mapping().get(entry.qualification, set())}:
+                    elif escape_backslash_r(entry.subject).lower() in {s.lower() for s in physics_mapping.get(entry.qualification, set())}:
                         categorised_entries["physics"].append(entry)
-                    elif entry.subject.lower() in {s.lower() for s in fm_mapping().get(entry.qualification, set())}:
+                    elif escape_backslash_r(entry.subject).lower() in {s.lower() for s in fm_mapping.get(entry.qualification, set())}:
                         categorised_entries["fm"].append(entry)
                     else:
                         categorised_entries["additional_subjects"].append(entry)

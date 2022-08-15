@@ -75,6 +75,37 @@ def get_internal_mapping(path_to_file, sheet_name):
     return output_dict
 
 
+def get_subject_mapping(path_to_file, sheet_name):
+    if not path_to_file.endswith(".xlsx"):
+        logging.error("Mapping file not in xlsx format")
+        raise InputError(
+            'not path_to_file.endswith(".xlsx")', "Input file must be in xlsx format"
+        )
+
+    input_file = path_to_file
+
+    from openpyxl import load_workbook
+
+    wb = load_workbook(filename=input_file, read_only=True)
+    ws = wb[sheet_name]
+
+    # Maps values in columns after 2nd to value in 1st column
+    output_dict = dict()
+
+    for row in ws.rows:
+        qual = None
+        for cell in row:
+            if qual is None:
+                # Value in first column is the qualification
+                qual = cell.value
+                output_dict[qual] = set()
+            elif cell.value is not None:
+                # Other values is subject names
+                output_dict[qual].add(cell.value)
+
+    return output_dict
+
+
 def is_file_valid(file):
     if file.endswith(".pdf") and "unicode" in file:
         return True

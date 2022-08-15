@@ -51,6 +51,9 @@ pdf_filename_split_index = 2
 
 # Sheet name of the qualification mapping in mapping file
 qualification_mapping_sheet_name = "Mapping"
+maths_mapping_sheet_name = 'Maths'
+physics_mapping_sheet_name = 'Physics'
+further_maths_mapping_sheet_name = 'FM'
 
 is_id_file_banner = True
 is_banner_cumulative = True
