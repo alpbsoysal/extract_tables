@@ -202,18 +202,18 @@ if __name__ == "__main__":
         print('\r\n\r\nQualification: {}'.format(qual))
         print('Subjects: ', end='')
         for name in math_names[qual]:
-            print('{}, '.format(name), end='')
+            print("'{}', ".format(name), end='')
 
     print('\r\n\r\n\r\nSubject names for Physics found in this batch, per valid qualification:')
     for qual in phys_names:
         print('\r\r\n\nQualification: {}'.format(qual))
         print('Subjects: ', end='')
         for name in phys_names[qual]:
-            print('{}, '.format(name), end='')
+            print("'{}', ".format(name), end='')
 
     print('\r\n\r\n\r\nSubject names for Further Mathematics found in this batch, per valid qualification:')
     for qual in fm_names:
         print('\r\n\r\nQualification: {}'.format(qual))
         print('Subjects: ', end='')
         for name in fm_names[qual]:
-            print('{}, '.format(name), end='')
+            print("'{}', ".format(name), end='')
