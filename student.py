@@ -88,7 +88,7 @@ class Student:
 
                 current_entries = self.which_grades.get(grade_entries_key)
 
-                # Filter out standard level subjects
+                # Filter out standard level subjects and extended essays
                 grade_entries = [
                     entry
                     for entry in current_entries
@@ -96,6 +96,8 @@ class Student:
                         "S" in str(entry.grade).upper()
                         or "stand lvl" in str(entry.subject).lower()
                         or "standard lvl" in str(entry.subject).lower()
+                        or 'ext essay' in str(entry.subject).lower()
+                        or 'extended essay' in str(entry.subject).lower()
                     )
                 ]
 
