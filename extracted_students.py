@@ -640,13 +640,11 @@ class ExtractedStudents:
             # List of entries are not empty
             if grade_entries:
                 for entry in grade_entries:
-                    if entry.subject in math_mapping().get(entry.qualification, set()):
+                    if entry.subject.lower() in {s.lower() for s in math_mapping().get(entry.qualification, set())}:
                         categorised_entries["math"].append(entry)
-                    elif entry.subject in physics_mapping().get(
-                        entry.qualification, set()
-                    ):
+                    elif entry.subject.lower() in {s.lower() for s in physics_mapping().get(entry.qualification, set())}:
                         categorised_entries["physics"].append(entry)
-                    elif entry.subject in fm_mapping().get(entry.qualification, set()):
+                    elif entry.subject.lower() in {s.lower() for s in fm_mapping().get(entry.qualification, set())}:
                         categorised_entries["fm"].append(entry)
                     else:
                         categorised_entries["additional_subjects"].append(entry)
