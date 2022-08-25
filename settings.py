@@ -10,30 +10,10 @@
 batch_number = 1
 cycle = 'Nov'
 
-# Location of the PDF files
-path_to_pdfs = 'testing/everything/pdfs'
-
-# Location of the mapping file
-path_to_mapping = 'testing/everything/pdfs'
-# Name of mapping file
-mapping_name = 'mapping.xlsx'
-
-# Path to banner file
-path_to_banner = 'testing/everything/pdfs'
+# Base directory where the files are located
+base_directory = 'testing/case_3'
 # Name of banner file
 banner_name = 'Batch 1.xlsx'
-
-# Path to database CSV
-path_to_database = 'testing/everything/data'
-# Name of database CSV
-database_name = 'previously_extracted.csv'
-
-# Path to output directory
-output_path = 'testing/everything/output'
-
-#########################################
-############ AUXILIARY INPUTS ###########
-#########################################
 
 # Keys are the initials of markers, values are the weighting of applications to be allocated
 # to that person.
@@ -42,6 +22,30 @@ allocation_details = {
     "TM": 1,
     "EN": 1,
 }
+
+#########################################
+############ AUXILIARY INPUTS ###########
+#########################################
+
+# Location of the PDF files
+path_to_pdfs = 'pdfs'
+
+# Location of the mapping file
+path_to_mapping = 'pdfs'
+# Name of mapping file
+mapping_name = 'mapping.xlsx'
+
+# Path to banner file
+path_to_banner = 'pdfs'
+
+# Path to database CSV
+path_to_database = 'data'
+# Name of database CSV
+database_name = 'previously_extracted.csv'
+
+# Path to output directory
+output_path = 'output'
+
 
 # _ is used as a delimeter to split the filename of the pdf
 # This index is for which item in the list (from split) corresponds to the
@@ -85,11 +89,11 @@ def get_full_path(path):
     return os.path.abspath(path).encode("unicode-escape").decode()
 
 
-path_to_pdfs_to_extract = get_full_path(path_to_pdfs)
+path_to_pdfs_to_extract = get_full_path(os.path.join(base_directory, path_to_pdfs))
 
-path_to_mapping_file = get_full_file_path(path_to_mapping, mapping_name)
+path_to_mapping_file = get_full_file_path(os.path.join(base_directory, path_to_mapping), mapping_name)
 
-path_to_target_file = get_full_file_path(path_to_banner, banner_name)
+path_to_target_file = get_full_file_path(os.path.join(base_directory, path_to_banner), banner_name)
 
 assert (
     max(
@@ -100,11 +104,11 @@ assert (
     < len(database_headers)
 )
 
-path_to_database_of_extracted_pdfs = get_full_file_path(path_to_database, database_name)
+path_to_database_of_extracted_pdfs = get_full_file_path(os.path.join(base_directory, path_to_database), database_name)
 
-output_path = get_full_path(output_path)
+output_path = get_full_path(os.path.join(base_directory, output_path))
 
-path_to_pdf_pool = os.path.join(output_path, "pool")
+path_to_pdf_pool = os.path.join(base_directory, output_path, "pool")
 path_to_pdf_pool = get_full_path(path_to_pdf_pool)
 
 if not os.path.exists(path_to_pdf_pool):

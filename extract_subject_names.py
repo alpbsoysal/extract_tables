@@ -89,11 +89,17 @@ if __name__ == "__main__":
     math_names = {}
     phys_names = {}
     fm_names = {}
+    math_totals = {}
+    phys_totals = {}
+    fm_totals = {}
 
     for qual in all_valid_quals(INTERNAL_MAPPING):
-        math_names[qual] = set()
-        phys_names[qual] = set()
-        fm_names[qual] = set()
+        math_names[qual] = {}
+        phys_names[qual] = {}
+        fm_names[qual] = {}
+        math_totals[qual] = 0
+        phys_totals[qual] = 0
+        fm_totals[qual] = 0
 
     pbar = tqdm(total=total_num_files, desc="Table Processing: ")
     # Iterate over all files and applicant IDs
@@ -145,14 +151,30 @@ if __name__ == "__main__":
 
                             subject = escape_backslash_r(str(table['Subject'][row]))
 
-                            if 'math' in subject.lower() and 'further' not in subject.lower():
-                                math_names[qual].add(subject)
+                            if subject in math_names[qual].keys():
+                                math_names[qual][subject] += 1
+                                math_totals[qual] += 1
 
-                            elif 'further' in subject.lower() and 'math' in subject.lower():
-                                fm_names[qual].add(subject)
+                            elif subject in phys_names[qual].keys():
+                                phys_names[qual][subject] += 1
+                                phys_totals[qual] += 1
 
-                            elif 'physics' in subject.lower():
-                                phys_names[qual].add(subject)
+                            elif subject in fm_names[qual].keys():
+                                fm_names[qual][subject] += 1
+                                fm_totals[qual] += 1
+
+                            else:
+                                if 'math' in subject.lower() and 'further' not in subject.lower():
+                                    math_names[qual][subject] = 1
+                                    math_totals[qual] += 1
+
+                                elif 'further' in subject.lower() and 'math' in subject.lower():
+                                    fm_names[qual][subject] = 1
+                                    fm_totals[qual] += 1
+
+                                elif 'physics' in subject.lower():
+                                    phys_names[qual][subject] = 1
+                                    phys_totals[qual] += 1
 
                         elif is_detailed_entry(table, row):
 
@@ -171,16 +193,32 @@ if __name__ == "__main__":
 
                                     for module in individual_modules:
 
-                                        subject = module.split("Date:")[0].split('Value:')[0].split('Predicted Grade:')[0].split("Grade:")[0].rstrip(' ')
+                                        subject = module.split("Date:")[0].split('Value:')[0].split('Predicted Grade:')[0].split("Grade:")[0].strip()
 
-                                        if 'math' in subject.lower() and 'further' not in subject.lower():
-                                            math_names[qual].add(subject)
+                                        if subject in math_names[qual].keys():
+                                            math_names[qual][subject] += 1
+                                            math_totals[qual] += 1
 
-                                        elif 'further' in subject.lower() and 'math' in subject.lower():
-                                            fm_names[qual].add(subject)
+                                        elif subject in phys_names[qual].keys():
+                                            phys_names[qual][subject] += 1
+                                            phys_totals[qual] += 1
 
-                                        elif 'physics' in subject.lower():
-                                            phys_names[qual].add(subject)
+                                        elif subject in fm_names[qual].keys():
+                                            fm_names[qual][subject] += 1
+                                            fm_totals[qual] += 1
+
+                                        else:
+                                            if 'math' in subject.lower() and 'further' not in subject.lower():
+                                                math_names[qual][subject] = 1
+                                                math_totals[qual] += 1
+
+                                            elif 'further' in subject.lower() and 'math' in subject.lower():
+                                                fm_names[qual][subject] = 1
+                                                fm_totals[qual] += 1
+
+                                            elif 'physics' in subject.lower():
+                                                phys_names[qual][subject] = 1
+                                                phys_totals[qual] += 1
 
                 elif EXIT_STRING in table_headers:
                     # Exit condition
@@ -197,23 +235,20 @@ if __name__ == "__main__":
 
     pbar.close()
 
-    print('\r\r\r\n\n\nSubject names for Mathematics found in this batch, per valid qualification:')
+    print('\r\r\n\nSubject names for MATHEMATICS found in this batch, per valid qualification, with number of occurances:')
     for qual in math_names:
-        print('\r\n\r\nQualification: {}'.format(qual))
-        print('Subjects: ', end='')
-        for name in math_names[qual]:
-            print("'{}', ".format(name), end='')
+        print('\r\nQualification: {}'.format(qual))
+        for name, val in math_names[qual].items():
+            print("{:<36}: {:.1%}%".format(name, (val/math_totals[qual])))
 
-    print('\r\n\r\n\r\nSubject names for Physics found in this batch, per valid qualification:')
+    print('\r\n\r\nSubject names for PHYSICS found in this batch, per valid qualification, with number of occurances:')
     for qual in phys_names:
-        print('\r\r\n\nQualification: {}'.format(qual))
-        print('Subjects: ', end='')
-        for name in phys_names[qual]:
-            print("'{}', ".format(name), end='')
+        print('\r\nQualification: {}'.format(qual))
+        for name, val in phys_names[qual].items():
+            print("{:<36}: {:.1%}%".format(name, (val/phys_totals[qual])))
 
-    print('\r\n\r\n\r\nSubject names for Further Mathematics found in this batch, per valid qualification:')
+    print('\r\n\r\nSubject names for FURTHER MATHEMATICS found in this batch, per valid qualification, with number of occurances:')
     for qual in fm_names:
-        print('\r\n\r\nQualification: {}'.format(qual))
-        print('Subjects: ', end='')
+        print('\r\nQualification: {}'.format(qual))
         for name in fm_names[qual]:
-            print("'{}', ".format(name), end='')
+            print("{:<40}: {:.1%}%".format(name, (val/fm_totals[qual])))
