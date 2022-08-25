@@ -237,18 +237,21 @@ if __name__ == "__main__":
 
     print('\r\r\n\nSubject names for MATHEMATICS found in this batch, per valid qualification, with number of occurances:')
     for qual in math_names:
-        print('\r\nQualification: {}'.format(qual))
-        for name, val in math_names[qual].items():
-            print("{:<36}: {:.1%}%".format(name, (val/math_totals[qual])))
+        if math_totals[qual] != 0:
+            print('\r\nQualification: {}'.format(qual))
+            for name, val in math_names[qual].items():
+                print("{:<40}: {:5.1%} ({})".format(name, (val/math_totals[qual]), val))
 
     print('\r\n\r\nSubject names for PHYSICS found in this batch, per valid qualification, with number of occurances:')
     for qual in phys_names:
-        print('\r\nQualification: {}'.format(qual))
-        for name, val in phys_names[qual].items():
-            print("{:<36}: {:.1%}%".format(name, (val/phys_totals[qual])))
+        if phys_totals[qual] != 0:
+            print('\r\nQualification: {}'.format(qual))
+            for name, val in phys_names[qual].items():
+                print("{:<40}: {:5.1%} ({})".format(name, (val/phys_totals[qual]), val))
 
     print('\r\n\r\nSubject names for FURTHER MATHEMATICS found in this batch, per valid qualification, with number of occurances:')
     for qual in fm_names:
-        print('\r\nQualification: {}'.format(qual))
-        for name in fm_names[qual]:
-            print("{:<40}: {:.1%}%".format(name, (val/fm_totals[qual])))
+        if fm_totals[qual] != 0:
+            print('\r\nQualification: {}'.format(qual))
+            for name, val in fm_names[qual].items():
+                print("{:<40}: {:>5.1%} ({})".format(name, (val/fm_totals[qual]), val))
