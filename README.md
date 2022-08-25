@@ -26,14 +26,14 @@ Installation can be broken down into three main steps:
   3. Installing the dependencies of Tabula
 After that, you're good to go!
 
-*N.B. on Operating System:* This was developed in Linux (Ubuntu 18.04) and has not been tested in any other operating system.
+*N.B. on Operating System:* This was developed in Linux (Ubuntu 18.04, 20.04 and 22.04) and has not been tested in any other operating system.
 
 ### Download the Code Base  
 
 This should be relatively painless. There are a couple of ways to do this,
   - Using git clone. Go to the folder you want to download into, then run this command
       ```
-      git clone https://github.com/IDEA-lab-IC/extract_tables.git
+      git clone https://github.com/alpbsoysal/extract_tables.git
       ```
   - Download the zip file
   - Click the Green download code button 
