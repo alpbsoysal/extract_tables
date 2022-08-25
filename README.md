@@ -259,6 +259,12 @@ In general, I would advise not to use the ID with a leading 0 as it can lead to 
 Another potential case would be the zero being dropped during the loading from the excel file. 
 In this case, instituite a check during the loading phase then prepend a `"0"` to the ID as a `str`. 
 
+## Contact
+
+If there are any issues or questions regarding running or further developing the program that the included documentation fails to address, feel free to contact the last maintainer of the program in the following addresses:
+
+- [alp.soysal19@imperial.ac.uk](mailto:alp.soysal19@imperial.ac.uk)
+- or [alpbsoysal@gmail.com](mailto:alpbsoysal@gmail.com)
 
 ## To Do  
 
