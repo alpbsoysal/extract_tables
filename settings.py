@@ -114,6 +114,9 @@ path_to_pdf_pool = get_full_path(path_to_pdf_pool)
 if not os.path.exists(path_to_pdf_pool):
     os.makedirs(path_to_pdf_pool)
 
+if not os.path.exists(path_to_database_of_extracted_pdfs):
+    os.makedirs(os.path.join(base_directory, path_to_database))
+
 output_filename = f"grades_{batch_number}.xlsx"
 
 log_filename = f"execution_log_{batch_number}.log"
