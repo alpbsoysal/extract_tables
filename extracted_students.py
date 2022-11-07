@@ -582,6 +582,8 @@ class ExtractedStudents:
             any_issues[-1] += "highest most recent "
 
             return lst_of_entries[grades.index(max(grades))]
+        else:
+            return lst_of_entries[years.index(max_year)]
 
     @staticmethod
     def compress_log(log):
